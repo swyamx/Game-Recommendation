@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Recommendation System</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        header {
+            background: #007BFF;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        section {
+            margin-bottom: 40px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #007BFF;
+        }
+        #game-list, #recommendation-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+        .game {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        .game:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .game img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .game p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .game.selected {
+            border: 2px solid #007BFF;
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+        }
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            margin-top: 40px;
+        }
+        footer p {
+            margin: 0;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Game Recommendation System</h1>
+    </header>
+    <main>
+        <section id="game-selection">
+            <h2>Select Games You Like:</h2>
+            <div id="game-list">
+                <!-- Example Games -->
+                <div class="game" data-game-id="1">
+                    <img src="game1.jpg" alt="Game 1">
+                    <p>Game 1</p>
+                </div>
+                <div class="game" data-game-id="2">
+                    <img src="game2.jpg" alt="Game 2">
+                    <p>Game 2</p>
+                </div>
+                <div class="game" data-game-id="3">
+                    <img src="game3.jpg" alt="Game 3">
+                    <p>Game 3</p>
+                </div>
+                <!-- Add more games as needed -->
+            </div>
+        </section>
+
+        <section id="recommendations">
+            <h2>Recommended Games:</h2>
+            <div id="recommendation-list">
+                <!-- Recommendations will appear here -->
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const apiKey = '70d54f37a8bf46bfa64f0e09f2b3b0f0'; // Replace with your RAWG API key
+        const apiUrl = 'https://api.rawg.io/api/games'; // RAWG API endpoint
+    
+        const selectedGames = new Set();
+    
+        async function fetchGames() {
+            try {
+                const response = await fetch(`${apiUrl}?key=${apiKey}`);
+                const data = await response.json();
+                populateGameList(data.results);
+            } catch (error) {
+                console.error('Error fetching games:', error);
+            }
+        }
+    
+        function populateGameList(games) {
+            const gameList = document.getElementById('game-list');
+            gameList.innerHTML = ''; // Clear existing games
+    
+            games.forEach(game => {
+                const gameElement = document.createElement('div');
+                gameElement.className = 'game';
+                gameElement.dataset.gameId = game.id;
+                gameElement.innerHTML = `
+                    <img src="${game.background_image}" alt="${game.name}">
+                    <p>${game.name}</p>
+                `;
+    
+                gameElement.addEventListener('click', () => {
+                    const gameId = game.id;
+                    if (selectedGames.has(gameId)) {
+                        selectedGames.delete(gameId);
+                        gameElement.style.border = "1px solid #ddd";
+                    } else {
+                        selectedGames.add(gameId);
+                        gameElement.style.border = "2px solid #007BFF";
+                    }
+    
+                    fetchRecommendations();
+                });
+    
+                gameList.appendChild(gameElement);
+            });
+        }
+    
+        async function fetchRecommendations() {
+            const recommendationList = document.getElementById('recommendation-list');
+            recommendationList.innerHTML = '';
+    
+            const recommendedGames = new Set();
+    
+            for (const selectedId of selectedGames) {
+                try {
+                    const response = await fetch(`${apiUrl}/${selectedId}?key=${apiKey}`);
+                    const game = await response.json();
+                    game.genres.forEach(genre => {
+                        if (!selectedGames.has(genre.id)) {
+                            recommendedGames.add(genre.id);
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error fetching recommendations:', error);
+                }
+            }
+    
+            for (const recId of recommendedGames) {
+                try {
+                    const response = await fetch(`${apiUrl}?genres=${recId}&key=${apiKey}`);
+                    const data = await response.json();
+                    data.results.forEach(game => {
+                        const gameElement = document.createElement('div');
+                        gameElement.className = 'game';
+                        gameElement.innerHTML = `
+                            <img src="${game.background_image}" alt="${game.name}">
+                            <p>${game.name}</p>
+                            <p><strong>Genre:</strong> ${game.genres.map(g => g.name).join(', ')}</p>
+                        `;
+                        recommendationList.appendChild(gameElement);
+                    });
+                } catch (error) {
+                    console.error('Error fetching game data:', error);
+                }
+            }
+        }
+    
+        // Initialize the app
+        fetchGames();
+    </script>
+    
+</body>
+</html>
