@@ -5,91 +5,787 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Recommendation System</title>
     <style>
+        /* 1. Color Scheme and Branding */
+        :root {
+            --primary: #4D7CFE;
+            --primary-dark: #3D63CB;
+            --secondary: #FF6B6B;
+            --background: #f0f7ff;
+            --surface: #ffffff;
+            --text: #2D3748;
+            --text-light: #4A5568;
+            --error: #FF6B6B;
+            --success: #4ECDC4;
+
+            /* Dark theme variables */
+            --dark-background: #1a1a1a;
+            --dark-surface: #2d2d2d;
+            --dark-text: #ffffff;
+            --dark-text-light: #a1a1aa;
+        }
+
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f9f9f9;
-            color: #333;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
         }
-        header {
-            background: #007BFF;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        /* 2. Typography Improvements */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+            transform: rotate(-1deg);
         }
+
         header h1 {
-            margin: 0;
-            font-size: 2rem;
-        }
-        main {
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        section {
-            margin-bottom: 40px;
-        }
-        h2 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: #007BFF;
-        }
-        #game-list, #recommendation-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-        }
-        .game {
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 10px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-            cursor: pointer;
-        }
-        .game:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        .game img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-        .game p {
-            margin: 5px 0;
-            font-size: 0.9rem;
-            color: #555;
-        }
-        .game.selected {
-            border: 2px solid #007BFF;
-            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
-        }
-        footer {
-            background: #333;
+            font-size: 2.8rem;
+            font-weight: 700;
             color: white;
-            text-align: center;
-            padding: 10px;
-            margin-top: 40px;
+            text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+            transform: rotate(-2deg);
+            transition: transform 0.3s ease;
         }
-        footer p {
-            margin: 0;
-            font-size: 0.8rem;
+
+        header h1:hover {
+            transform: rotate(2deg);
+        }
+
+        h2 {
+            font-size: 1.875rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0.75rem 0;
+        }
+
+        /* 3. Card Design Enhancements */
+        .game {
+            border-radius: 20px;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 3px solid transparent;
+            background: linear-gradient(var(--surface), var(--surface)) padding-box,
+                        linear-gradient(45deg, #ff6b6b, #4ecdc4) border-box;
+        }
+
+        .game:hover {
+            transform: translateY(-8px) rotate(2deg);
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04),
+                0 0 15px rgba(77, 171, 247, 0.5);
+        }
+
+        .game img {
+            border-radius: 15px;
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .game:hover img {
+            transform: scale(1.08);
+        }
+
+        .game.selected {
+            animation: bounce 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 3px solid var(--primary);
+            box-shadow: 
+                0 0 0 4px rgba(77, 124, 254, 0.2),
+                0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .game.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--primary);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        /* Add dark mode support for selected games */
+        [data-theme="dark"] .game.selected {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.1);
+        }
+
+        /* 4. Layout Refinements */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4D7CFE, #3D63CB, #6C5CE7);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.1;
+        }
+
+        .search-container {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        #game-search, #platform-filter {
+            padding: 0.75rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        #game-search:focus, #platform-filter:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            outline: none;
+        }
+
+        /* 5. Interactive Elements */
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .loading {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .game button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .game button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .match-details {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 0.75rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 3;
+        }
+
+        .game:hover .match-details {
+            transform: translateY(0);
+        }
+
+        .game-details {
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.8125rem;
+        }
+
+        .game-details p {
+            margin: 0.25rem 0;
+            line-height: 1.4;
+        }
+
+        .game-details strong {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            main {
+                padding: 1rem;
+            }
+
+            .game {
+                min-height: auto;
+            }
+
+            #game-list, #recommendation-list, #selected-games-list {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+
+            .search-container {
+                flex-direction: column;
+            }
+
+            #game-search, #platform-filter {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        /* Loading Skeleton Animation */
+        @keyframes shimmer {
+            0% {
+                background-position: -468px 0;
+            }
+            100% {
+                background-position: 468px 0;
+            }
+        }
+
+        .skeleton {
+            background: #f6f7f8;
+            background-image: linear-gradient(
+                to right,
+                #f6f7f8 0%,
+                #edeef1 20%,
+                #f6f7f8 40%,
+                #f6f7f8 100%
+            );
+            background-repeat: no-repeat;
+            background-size: 800px 104px;
+            animation: shimmer 1.5s infinite linear;
+        }
+
+        /* Tooltips */
+        [data-tooltip] {
+            position: relative;
+        }
+
+        [data-tooltip]:before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0.5rem;
+            background: var(--text);
+            color: white;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+        }
+
+        [data-tooltip]:hover:before {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Update the game card and grid styling */
+        .game {
+            background: var(--surface);
+            border-radius: 0.75rem;
+            padding: 0.75rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+                        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game img {
+            border-radius: 0.5rem;
+            transition: transform 0.3s ease;
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+        }
+
+        /* Adjust typography */
+        .game h3 {
+            font-size: 1rem;
+            margin: 0.5rem 0;
+            line-height: 1.2;
+        }
+
+        .game-details {
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.8125rem;
+        }
+
+        .game-details p {
+            margin: 0.25rem 0;
+            line-height: 1.4;
+        }
+
+        /* Grid layout adjustments */
+        #game-list, #recommendation-list, #selected-games-list {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        }
+
+        /* Responsive adjustments */
+        @media (min-width: 1200px) {
+            #game-list, #recommendation-list, #selected-games-list {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        @media (max-width: 1199px) and (min-width: 768px) {
+            #game-list, #recommendation-list, #selected-games-list {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 767px) {
+            #game-list, #recommendation-list, #selected-games-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Add these styles for the recommendation sections */
+        .recommendation-section {
+            margin-bottom: 2rem;
+        }
+
+        .recommendation-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .recommendation-section {
+            flex: 1;
+            max-width: calc(50% - 1rem);  /* Take up half the space minus gap */
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .section-games {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(2, minmax(200px, 1fr));  /* Match the main grid constraints */
+        }
+
+        /* Remove any specific .game styles that might be conflicting in the sections */
+        .recommendation-section .game {
+            width: auto;
+            height: auto;
+        }
+
+        /* Update the dark mode styles */
+        [data-theme="dark"] {
+            --background: var(--dark-background);
+            --surface: var(--dark-surface);
+            --text: var(--dark-text);
+            --text-light: var(--dark-text-light);
+            --primary: #60a5fa;  /* Lighter blue for better contrast */
+            --primary-dark: #3b82f6;
+        }
+
+        [data-theme="dark"] .game {
+            background: linear-gradient(var(--surface), var(--surface)) padding-box,
+                        linear-gradient(45deg, #4D7CFE, #6C5CE7) border-box;
+        }
+
+        [data-theme="dark"] .search-container {
+            background-color: var(--dark-surface);
+        }
+
+        [data-theme="dark"] #game-search,
+        [data-theme="dark"] #platform-filter {
+            background-color: var(--dark-surface);
+            color: var(--dark-text);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        [data-theme="dark"] .game-details {
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        [data-theme="dark"] .section-title {
+            border-bottom-color: var(--primary);
+        }
+
+        [data-theme="dark"] .match-details {
+            background: rgba(30, 41, 59, 0.95);
+            color: var(--dark-text);
+        }
+
+        /* Add theme switch styles */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            right: 2rem;
+            top: 2rem;
+        }
+
+        .theme-switch-wrapper em {
+            margin-left: 10px;
+            font-size: 1rem;
+            color: var(--surface);
+        }
+
+        .theme-switch {
+            display: inline-block;
+            height: 34px;
+            position: relative;
+            width: 60px;
+        }
+
+        .theme-switch input {
+            display: none;
+        }
+
+        .slider {
+            background-color: #ccc;
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+        }
+
+        .slider:before {
+            background-color: #fff;
+            bottom: 4px;
+            content: "";
+            height: 26px;
+            left: 4px;
+            position: absolute;
+            transition: .4s;
+            width: 26px;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+        /* Star styling */
+        .popular-star {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            color: gold;
+            font-size: 24px;
+            text-shadow: 
+                0 0 5px rgba(255, 215, 0, 0.5),
+                -1px -1px 0 #000,  /* Top-left border */
+                1px -1px 0 #000,   /* Top-right border */
+                -1px 1px 0 #000,   /* Bottom-left border */
+                1px 1px 0 #000;    /* Bottom-right border */
+            transform-origin: center;
+            transition: transform 0.3s ease;
+            z-index: 4;
+        }
+
+        /* Update star animation speed and timing */
+        @keyframes starSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .game:hover .popular-star {
+            animation: starSpin 1.5s cubic-bezier(0.4, 0, 0.2, 1);  /* Slower spin with smooth easing */
+        }
+
+        /* 1. Typography Updates */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+            transform: rotate(-1deg);
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+            transform: rotate(-2deg);
+            transition: transform 0.3s ease;
+        }
+
+        header h1:hover {
+            transform: rotate(2deg);
+        }
+
+        /* 2. Card Design Updates */
+        .game {
+            border-radius: 20px;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 3px solid transparent;
+            background: linear-gradient(var(--surface), var(--surface)) padding-box,
+                        linear-gradient(45deg, #ff6b6b, #4ecdc4) border-box;
+        }
+
+        .game:hover {
+            transform: translateY(-8px) rotate(2deg);
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04),
+                0 0 15px rgba(77, 171, 247, 0.5);
+        }
+
+        .game img {
+            border-radius: 15px;
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .game:hover img {
+            transform: scale(1.08);
+        }
+
+        /* 3. Color Scheme Updates */
+        :root {
+            --primary: #4D7CFE;
+            --primary-dark: #3D63CB;
+            --secondary: #FF6B6B;
+            --background: #f0f7ff;
+            --surface: #ffffff;
+            --text: #2D3748;
+            --text-light: #4A5568;
+            --error: #FF6B6B;
+            --success: #4ECDC4;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4D7CFE, #3D63CB, #6C5CE7);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.1;
+        }
+
+        /* 4. Animation Updates */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-5px) rotate(2deg); }
+        }
+
+        .game.selected {
+            animation: bounce 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 3px solid var(--primary);
+            box-shadow: 
+                0 0 0 4px rgba(77, 124, 254, 0.2),
+                0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .popular-star {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .game:hover .popular-star {
+            animation: starSpin 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        /* Update button styles */
+        button {
+            border-radius: 15px;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transform-origin: center;
+        }
+
+        button:hover {
+            transform: scale(1.05) rotate(-2deg);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Dark mode adjustments */
+        [data-theme="dark"] {
+            --background: #1a1f2c;
+            --surface: #2d3748;
+            --text: #ffffff;
+            --text-light: #cbd5e0;
+        }
+
+        [data-theme="dark"] .game {
+            background: linear-gradient(var(--surface), var(--surface)) padding-box,
+                        linear-gradient(45deg, #4D7CFE, #6C5CE7) border-box;
+        }
+
+        /* Add random movement animation keyframes */
+        @keyframes wiggle1 {
+            0%, 100% { transform: translateY(-8px) rotate(2deg); }
+            50% { transform: translateY(-12px) rotate(-2deg); }
+        }
+
+        @keyframes wiggle2 {
+            0%, 100% { transform: translateX(5px) translateY(-10px) rotate(-3deg); }
+            50% { transform: translateX(-5px) translateY(-6px) rotate(1deg); }
+        }
+
+        @keyframes wiggle3 {
+            0%, 100% { transform: translateY(-15px) rotate(1deg); }
+            50% { transform: translateY(-5px) rotate(-1deg); }
+        }
+
+        @keyframes wiggle4 {
+            0%, 100% { transform: translateX(-8px) translateY(-8px) rotate(-2deg); }
+            50% { transform: translateX(8px) translateY(-12px) rotate(2deg); }
+        }
+
+        /* Update game card hover with random animations */
+        .game {
+            border-radius: 20px;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 3px solid transparent;
+            background: linear-gradient(var(--surface), var(--surface)) padding-box,
+                        linear-gradient(45deg, #ff6b6b, #4ecdc4) border-box;
+        }
+
+        .game:nth-child(4n+1):hover {
+            animation: wiggle1 1s infinite;
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04),
+                0 0 15px rgba(77, 171, 247, 0.5);
+        }
+
+        .game:nth-child(4n+2):hover {
+            animation: wiggle2 1s infinite;
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04),
+                0 0 15px rgba(77, 171, 247, 0.5);
+        }
+
+        .game:nth-child(4n+3):hover {
+            animation: wiggle3 1s infinite;
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04),
+                0 0 15px rgba(77, 171, 247, 0.5);
+        }
+
+        .game:nth-child(4n+4):hover {
+            animation: wiggle4 1s infinite;
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04),
+                0 0 15px rgba(77, 171, 247, 0.5);
+        }
+
+        .match-details {
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+
+        .match-details strong {
+            font-weight: 600;
+        }
+
+        .section-title {
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
     </style>
 </head>
 <body>
     <header>
         <h1>Game Recommendation System</h1>
+        <!-- Add theme toggle switch -->
+        <div class="theme-switch-wrapper">
+            <label class="theme-switch" for="checkbox">
+                <input type="checkbox" id="checkbox" />
+                <div class="slider round"></div>
+            </label>
+            <em>Dark Mode</em>
+        </div>
     </header>
     <main>
+        <section id="selected-games">
+            <h2>Your Selected Games:</h2>
+            <div id="selected-games-list">
+                <!-- Selected games will appear here -->
+            </div>
+        </section>
+
         <section id="game-selection">
-            <h2>Select Games You Like:</h2>
+            <h2>Popular Games:</h2>
+            <div class="search-container">
+                <input type="text" id="game-search" placeholder="Search for games...">
+                <select id="platform-filter">
+                    <option value="">All Platforms</option>
+                    <option value="187">PlayStation 5</option>
+                    <option value="186">Xbox Series X</option>
+                    <option value="4">PC</option>
+                    <option value="7">Nintendo Switch</option>
+                    <option value="18">PlayStation 4</option>
+                    <option value="1">Xbox One</option>
+                </select>
+            </div>
             <div id="game-list">
                 <!-- Example Games -->
                 <div class="game" data-game-id="1">
@@ -117,93 +813,690 @@
     </main>
 
     <script>
-        const apiKey = '70d54f37a8bf46bfa64f0e09f2b3b0f0'; // Replace with your RAWG API key
-        const apiUrl = 'https://api.rawg.io/api/games'; // RAWG API endpoint
-    
+        const apiKey = '70d54f37a8bf46bfa64f0e09f2b3b0f0';
+        const apiUrl = 'https://api.rawg.io/api/games';
         const selectedGames = new Set();
-    
-        async function fetchGames() {
+
+        // 1. Core Scoring Functions
+        function calculateCoreSimilarity(selectedGame, candidateGame) {
+            const genreSimilarity = calculateGenreSimilarity(selectedGame.genres, candidateGame.genres);
+            const tagSimilarity = calculateTagSimilarity(selectedGame.tags, candidateGame.tags);
+            const mechanicsSimilarity = calculateMechanicsSimilarity(selectedGame, candidateGame);
+            const nameSimilarity = calculateNameSimilarity(selectedGame.name, candidateGame.name);
+
+            return {
+                score: (
+                    genreSimilarity * 0.3 + 
+                    tagSimilarity * 0.2 + 
+                    mechanicsSimilarity * 0.2 +
+                    nameSimilarity * 0.3        // Added significant weight to name similarity
+                ),
+                details: {
+                    genreScore: genreSimilarity,
+                    tagScore: tagSimilarity,
+                    mechanicsScore: mechanicsSimilarity,
+                    nameSimilarity: nameSimilarity
+                }
+            };
+        }
+
+        function calculateQualityScore(game) {
+            const metacriticScore = game.metacritic ? game.metacritic / 100 : 0;
+            const userRatingScore = game.rating ? game.rating / game.rating_top : 0;
+            const popularityScore = Math.min(game.ratings_count / 10000, 1); // Normalize to max 10000 ratings
+
+            return {
+                score: (metacriticScore * 0.4 + userRatingScore * 0.4 + popularityScore * 0.2),
+                details: {
+                    metacritic: metacriticScore,
+                    userRating: userRatingScore,
+                    popularity: popularityScore
+                }
+            };
+        }
+
+        function calculateRelevanceScore(game) {
+            // Release date scoring (newer games score higher)
+            const releaseDate = new Date(game.released);
+            const now = new Date();
+            const yearsDiff = (now - releaseDate) / (1000 * 60 * 60 * 24 * 365);
+            const releaseDateScore = Math.max(0, 1 - (yearsDiff / 10)); // Linear decay over 10 years
+
+            // Platform availability
+            const platformScore = game.platforms ? Math.min(game.platforms.length / 5, 1) : 0;
+
+            return {
+                score: (releaseDateScore * 0.6 + platformScore * 0.4),
+                details: {
+                    releaseDate: releaseDateScore,
+                    platforms: platformScore
+                }
+            };
+        }
+
+        function calculateTechnicalScore(selectedGame, candidateGame) {
+            // Developer matching
+            const developerMatch = haveSameDeveloper(selectedGame.developers, candidateGame.developers);
+            
+            // Game modes matching
+            const gameModeScore = calculateGameModeSimilarity(selectedGame.game_modes, candidateGame.game_modes);
+            
+            // ESRB rating similarity
+            const esrbMatch = selectedGame.esrb_rating?.id === candidateGame.esrb_rating?.id ? 1 : 0;
+
+            return {
+                score: (developerMatch * 0.3 + gameModeScore * 0.4 + esrbMatch * 0.3),
+                details: {
+                    developer: developerMatch,
+                    gameModes: gameModeScore,
+                    esrb: esrbMatch
+                }
+            };
+        }
+
+        function calculateDeveloperPublisherScore(selectedGame, candidateGame) {
+            // Check developers match
+            const developerMatch = haveSameDeveloper(selectedGame.developers, candidateGame.developers);
+            
+            // Check publishers match
+            const publisherMatch = haveSamePublisher(selectedGame.publishers, candidateGame.publishers);
+
+            return {
+                score: (
+                    developerMatch * 0.5 +       // 50% for same developer
+                    publisherMatch * 0.5         // 50% for same publisher
+                ),
+                details: {
+                    developerMatch,
+                    publisherMatch,
+                    companies: {
+                        developers: candidateGame.developers?.map(d => d.name) || [],
+                        publishers: candidateGame.publishers?.map(p => p.name) || []
+                    }
+                }
+            };
+        }
+
+        function haveSameDeveloper(devs1, devs2) {
+            if (!devs1?.length || !devs2?.length) return 0;
+            return devs1.some(d1 => devs2.some(d2 => d1.id === d2.id)) ? 1 : 0;
+        }
+
+        function haveSamePublisher(pubs1, pubs2) {
+            if (!pubs1?.length || !pubs2?.length) return 0;
+            return pubs1.some(p1 => pubs2.some(p2 => p1.id === p2.id)) ? 1 : 0;
+        }
+
+        // 2. Main Ranking Function
+        function rankGame(candidateGame, selectedGames) {
+            const scores = selectedGames.map(selectedGame => {
+                const coreSim = calculateCoreSimilarity(selectedGame, candidateGame);
+                const technical = calculateTechnicalScore(selectedGame, candidateGame);
+                const devPubScore = calculateDeveloperPublisherScore(selectedGame, candidateGame);
+                
+                return {
+                    selectedGame: selectedGame.name,
+                    coreSimilarity: coreSim,
+                    technical: technical,
+                    devPubScore: devPubScore,
+                    totalScore: (
+                        coreSim.score * 0.4 + 
+                        technical.score * 0.2 + 
+                        devPubScore.score * 0.4    // Developer/Publisher weight
+                    )
+                };
+            });
+
+            const bestMatch = scores.reduce((a, b) => a.totalScore > b.totalScore ? a : b);
+            const quality = calculateQualityScore(candidateGame);
+            const relevance = calculateRelevanceScore(candidateGame);
+
+            const finalScore = (
+                bestMatch.coreSimilarity.score * 0.30 +    // Core Similarity: 30%
+                quality.score * 0.20 +                      // Quality: 20%
+                relevance.score * 0.20 +                    // Relevance: 20%
+                bestMatch.devPubScore.score * 0.30         // Developer/Publisher: 30%
+            );
+
+            return {
+                game: candidateGame,
+                score: finalScore,
+                details: {
+                    bestMatchWith: bestMatch.selectedGame,
+                    coreSimilarity: bestMatch.coreSimilarity.details,
+                    quality: quality.details,
+                    relevance: relevance.details,
+                    devPub: bestMatch.devPubScore.details
+                }
+            };
+        }
+
+        // 3. Main Recommendation Function
+        async function fetchRecommendations() {
+            const recommendationList = document.getElementById('recommendation-list');
+            recommendationList.innerHTML = '<p>Finding recommendations...</p>';
+            const platformId = document.getElementById('platform-filter').value;
+
             try {
-                const response = await fetch(`${apiUrl}?key=${apiKey}`);
+                // 1. Get full details of all selected games
+                const selectedGamesDetails = [];
+                for (const selectedId of selectedGames) {
+                    const response = await fetch(`${apiUrl}/${selectedId}?key=${apiKey}`);
+                    const gameDetails = await response.json();
+                    selectedGamesDetails.push(gameDetails);
+                }
+
+                // 2. Get all unique genres from selected games
+                const selectedGenres = new Set(
+                    selectedGamesDetails.flatMap(game => game.genres.map(g => g.slug))
+                );
+
+                // 3. Fetch potential recommendations using genres
+                const genreParam = Array.from(selectedGenres).join(',');
+                let url = `${apiUrl}?key=${apiKey}&genres=${genreParam}&page_size=40&ordering=-rating`;
+                if (platformId) {
+                    url += `&platforms=${platformId}`;
+                }
+                const response = await fetch(url);
                 const data = await response.json();
-                populateGameList(data.results);
+
+                // 4. Get series name for additional search
+                const seriesNames = selectedGamesDetails.map(game => 
+                    game.name.toLowerCase().split(/\d/)[0].trim()
+                );
+
+                // 5. Fetch additional games by series names
+                let allCandidates = [...data.results];
+                
+                for (const seriesName of seriesNames) {
+                    if (seriesName.length > 3) {
+                        let seriesUrl = `${apiUrl}?key=${apiKey}&search=${seriesName}&page_size=20`;
+                        if (platformId) {
+                            seriesUrl += `&platforms=${platformId}`;
+                        }
+                        const seriesResponse = await fetch(seriesUrl);
+                        const seriesData = await seriesResponse.json();
+                        allCandidates = [...allCandidates, ...seriesData.results];
+                    }
+                }
+
+                // 6. Remove duplicates by ID
+                allCandidates = Array.from(
+                    new Map(allCandidates.map(game => [game.id, game])).values()
+                );
+
+                // 7. Split and rank candidates into two groups
+                const allRankedGames = allCandidates
+                    .filter(game => !selectedGames.has(game.id))
+                    .map(game => rankGame(game, selectedGamesDetails));
+
+                // Split into series/developer matches and other recommendations
+                const seriesMatches = allRankedGames
+                    .filter(({game, score, details}) => 
+                        details.coreSimilarity.nameSimilarity > 0.8 || 
+                        details.devPub.developerMatch || 
+                        details.devPub.publisherMatch
+                    )
+                    .sort((a, b) => b.score - a.score)
+                    .slice(0, 4); // Limit to top 4 series matches
+
+                const otherRecommendations = allRankedGames
+                    .filter(({game, score, details}) => 
+                        details.coreSimilarity.nameSimilarity <= 0.8 && 
+                        !details.devPub.developerMatch && 
+                        !details.devPub.publisherMatch
+                    )
+                    .sort((a, b) => b.score - a.score)
+                    .slice(0, 4); // Limit to top 4 other recommendations
+
+                // 8. Display recommendations in sections
+                recommendationList.innerHTML = '';
+
+                // Create container for both sections
+                const container = document.createElement('div');
+                container.className = 'recommendation-container';
+
+                // Series/Developer Matches Section
+                const seriesSection = document.createElement('div');
+                seriesSection.className = 'recommendation-section';
+                seriesSection.innerHTML = `
+                    <h2 class="section-title">Series & Developer Matches</h2>
+                    <div class="section-games">
+                        ${seriesMatches.length > 0 
+                            ? seriesMatches.map(({game, score, details}) => 
+                                createGameElement(game, score, details).outerHTML
+                              ).join('')
+                            : '<p style="grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--text-light);">No series or developer matches found for your selected games.</p>'
+                        }
+                    </div>
+                `;
+
+                // Other Recommendations Section
+                const otherSection = document.createElement('div');
+                otherSection.className = 'recommendation-section';
+                otherSection.innerHTML = `
+                    <h2 class="section-title">Similar Games</h2>
+                    <div class="section-games">
+                        ${otherRecommendations.length > 0 
+                            ? otherRecommendations.map(({game, score, details}) => 
+                                createGameElement(game, score, details).outerHTML
+                              ).join('')
+                            : '<p style="grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--text-light);">No similar games found. Try selecting different games.</p>'
+                        }
+                    </div>
+                `;
+
+                // Add both sections to container
+                container.appendChild(seriesSection);
+                container.appendChild(otherSection);
+                recommendationList.appendChild(container);
+
             } catch (error) {
-                console.error('Error fetching games:', error);
+                console.error('Error in recommendation system:', error);
+                recommendationList.innerHTML = '<p>Error finding recommendations. Please try again.</p>';
             }
         }
-    
-        function populateGameList(games) {
+
+        // Helper function to create game elements
+        function createGameElement(game, score, details) {
+            const gameElement = document.createElement('div');
+            gameElement.className = 'game';
+            
+            // Add star if game is popular
+            const isPopular = game.metacritic > 85 || game.ratings_count > 1000;
+            const starHtml = isPopular ? '<span class="popular-star">★</span>' : '';
+            
+            gameElement.innerHTML = `
+                ${starHtml}
+                <img src="${game.background_image}" alt="${game.name}">
+                <h3>${game.name}</h3>
+                <p><strong>Match Score:</strong> ${(score * 100).toFixed(0)}%</p>
+                <div class="match-details">
+                    <small>Release: ${game.released}</small><br>
+                    <small>Platforms: ${game.platforms?.map(p => p.platform.name).join(', ') || 'Unknown'}</small><br>
+                    <small>Genres: ${game.genres.map(g => g.name).join(', ')}</small><br>
+                    <strong>Developer:</strong> ${game.developers?.map(d => d.name).join(', ') || 'Unknown'}<br>
+                    <strong>Publisher:</strong> ${game.publishers?.map(p => p.name).join(', ') || 'Unknown'}<br>
+                    ${details.coreSimilarity.nameSimilarity > 0.8 ? '<p class="match-highlight">Same Series! 🎮</p>' : ''}
+                    ${details.devPub.developerMatch ? '<p class="match-highlight">Same Developer! 👨‍💻</p>' : ''}
+                    ${details.devPub.publisherMatch ? '<p class="match-highlight">Same Publisher! 🎮</p>' : ''}
+                </div>
+            `;
+            return gameElement;
+        }
+
+        // Helper functions (from previous implementation)
+        function calculateGenreSimilarity(genres1, genres2) {
+            if (!genres1?.length || !genres2?.length) return 0;
+            const set1 = new Set(genres1.map(g => g.id));
+            const set2 = new Set(genres2.map(g => g.id));
+            const intersection = new Set([...set1].filter(x => set2.has(x)));
+            const union = new Set([...set1, ...set2]);
+            return intersection.size / union.size;
+        }
+
+        function calculateTagSimilarity(tags1, tags2) {
+            if (!tags1?.length || !tags2?.length) return 0;
+            const set1 = new Set(tags1.map(t => t.id));
+            const set2 = new Set(tags2.map(t => t.id));
+            const intersection = new Set([...set1].filter(x => set2.has(x)));
+            const union = new Set([...set1, ...set2]);
+            return intersection.size / union.size;
+        }
+
+        function calculateMechanicsSimilarity(game1, game2) {
+            // Simplified mechanics comparison using tags and genres
+            const tagSim = calculateTagSimilarity(game1.tags, game2.tags);
+            const genreSim = calculateGenreSimilarity(game1.genres, game2.genres);
+            return (tagSim + genreSim) / 2;
+        }
+
+        function calculateGameModeSimilarity(modes1, modes2) {
+            if (!modes1?.length || !modes2?.length) return 0;
+            const set1 = new Set(modes1.map(m => m.id));
+            const set2 = new Set(modes2.map(m => m.id));
+            const intersection = new Set([...set1].filter(x => set2.has(x)));
+            const union = new Set([...set1, ...set2]);
+            return intersection.size / union.size;
+        }
+
+        // Debounce function to limit API calls
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Function to fetch games from API
+        async function fetchGames(searchQuery = '') {
             const gameList = document.getElementById('game-list');
-            gameList.innerHTML = ''; // Clear existing games
-    
+            gameList.classList.add('loading');
+            
+            try {
+                const platformId = document.getElementById('platform-filter').value;
+                let url;
+                
+                if (searchQuery) {
+                    // Search query with optional platform filter
+                    url = `${apiUrl}?key=${apiKey}&search=${searchQuery}&page_size=40`; // Increased page size for search
+                } else {
+                    // Popular games with better ordering parameters
+                    url = `${apiUrl}?key=${apiKey}&ordering=-rating,-metacritic,-added&page_size=40&metacritic=80,100&ratings_count=100`;
+                }
+
+                // Add platform parameter if a platform is selected
+                if (platformId) {
+                    url += `&platforms=${platformId}`;
+                }
+
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (searchQuery) {
+                    // For search results, sort popular games to the top
+                    const games = data.results.sort((a, b) => {
+                        const isPopularA = a.metacritic > 85 || a.ratings_count > 1000;
+                        const isPopularB = b.metacritic > 85 || b.ratings_count > 1000;
+                        
+                        if (isPopularA && !isPopularB) return -1;
+                        if (!isPopularA && isPopularB) return 1;
+                        return 0;
+                    }).slice(0, 12);
+                    
+                    displayGames(games);
+                } else {
+                    // For initial view, show the most popular games
+                    const games = data.results
+                        .filter(game => game.metacritic > 80 || game.ratings_count > 100)
+                        .slice(0, 12);
+                    
+                    displayGames(games);
+                }
+            } catch (error) {
+                console.error('Error fetching games:', error);
+                const gameList = document.getElementById('game-list');
+                gameList.innerHTML = '<p>Error loading games. Please try again.</p>';
+            } finally {
+                gameList.classList.remove('loading');
+            }
+        }
+
+        // Update displayGames function for the search/popular games section
+        function displayGames(games) {
+            const gameList = document.getElementById('game-list');
+            gameList.innerHTML = '';
+
             games.forEach(game => {
                 const gameElement = document.createElement('div');
                 gameElement.className = 'game';
                 gameElement.dataset.gameId = game.id;
+                
+                // Add star if game is popular
+                const isPopular = game.metacritic > 85 || game.ratings_count > 1000;
+                const starHtml = isPopular ? '<span class="popular-star">★</span>' : '';
+                
                 gameElement.innerHTML = `
+                    ${starHtml}
                     <img src="${game.background_image}" alt="${game.name}">
-                    <p>${game.name}</p>
+                    <h3>${game.name}</h3>
+                    <div class="game-details">
+                        ${game.metacritic ? `<p><strong>Metacritic:</strong> ${game.metacritic}</p>` : ''}
+                        <p><strong>Release:</strong> ${game.released || 'TBA'}</p>
+                        <p><strong>Platforms:</strong> ${game.platforms?.map(p => p.platform.name).join(', ') || 'Unknown'}</p>
+                        <p><strong>Genres:</strong> ${game.genres.map(g => g.name).join(', ')}</p>
+                    </div>
                 `;
-    
-                gameElement.addEventListener('click', () => {
-                    const gameId = game.id;
-                    if (selectedGames.has(gameId)) {
-                        selectedGames.delete(gameId);
-                        gameElement.style.border = "1px solid #ddd";
-                    } else {
-                        selectedGames.add(gameId);
-                        gameElement.style.border = "2px solid #007BFF";
-                    }
-    
-                    fetchRecommendations();
-                });
-    
+                
+                gameElement.addEventListener('click', () => toggleGameSelection(game));
                 gameList.appendChild(gameElement);
             });
         }
-    
-        async function fetchRecommendations() {
-            const recommendationList = document.getElementById('recommendation-list');
-            recommendationList.innerHTML = '';
-    
-            const recommendedGames = new Set();
-    
-            for (const selectedId of selectedGames) {
-                try {
-                    const response = await fetch(`${apiUrl}/${selectedId}?key=${apiKey}`);
-                    const game = await response.json();
-                    game.genres.forEach(genre => {
-                        if (!selectedGames.has(genre.id)) {
-                            recommendedGames.add(genre.id);
-                        }
-                    });
-                } catch (error) {
-                    console.error('Error fetching recommendations:', error);
+
+        // Call fetchGames on initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchGames();
+            
+            // Add platform filter event listener
+            document.getElementById('platform-filter').addEventListener('change', () => {
+                fetchGames(document.getElementById('game-search').value);
+                if (selectedGames.size > 0) {
+                    fetchRecommendations();
                 }
+            });
+
+            // Theme switching functionality
+            const toggleSwitch = document.getElementById('checkbox');
+            
+            function switchTheme(e) {
+                if (e.target.checked) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    localStorage.setItem('theme', 'light');
+                }    
             }
-    
-            for (const recId of recommendedGames) {
-                try {
-                    const response = await fetch(`${apiUrl}?genres=${recId}&key=${apiKey}`);
-                    const data = await response.json();
-                    data.results.forEach(game => {
-                        const gameElement = document.createElement('div');
-                        gameElement.className = 'game';
-                        gameElement.innerHTML = `
-                            <img src="${game.background_image}" alt="${game.name}">
-                            <p>${game.name}</p>
-                            <p><strong>Genre:</strong> ${game.genres.map(g => g.name).join(', ')}</p>
-                        `;
-                        recommendationList.appendChild(gameElement);
-                    });
-                } catch (error) {
-                    console.error('Error fetching game data:', error);
-                }
+
+            function initializeTheme() {
+                const currentTheme = localStorage.getItem('theme') || 'light';
+                document.documentElement.setAttribute('data-theme', currentTheme);
+                toggleSwitch.checked = currentTheme === 'dark';
+            }
+
+            // Add event listener to the toggle switch
+            toggleSwitch.addEventListener('change', switchTheme, false);
+            
+            // Initialize the theme
+            initializeTheme();
+        });
+
+        // Function to handle game selection
+        function toggleGameSelection(game) {
+            const gameElement = document.querySelector(`[data-game-id="${game.id}"]`);
+            
+            if (selectedGames.has(game.id)) {
+                selectedGames.delete(game.id);
+                gameElement.classList.remove('selected');
+                removeFromSelectedList(game.id);
+            } else {
+                selectedGames.add(game.id);
+                gameElement.classList.add('selected');
+                addToSelectedList(game);
+            }
+
+            if (selectedGames.size > 0) {
+                fetchRecommendations();
             }
         }
-    
-        // Initialize the app
-        fetchGames();
+
+        // Update addToSelectedList function for the selected games section
+        function addToSelectedList(game) {
+            const selectedGamesList = document.getElementById('selected-games-list');
+            const gameElement = document.createElement('div');
+            gameElement.className = 'game';
+            gameElement.dataset.gameId = game.id;
+            gameElement.innerHTML = `
+                <img src="${game.background_image}" alt="${game.name}">
+                <h3>${game.name}</h3>
+                <div class="game-details">
+                    <p><strong>Platforms:</strong> ${game.platforms?.map(p => p.platform.name).join(', ') || 'Unknown'}</p>
+                    <p><strong>Genres:</strong> ${game.genres.map(g => g.name).join(', ')}</p>
+                    <p><strong>Developer:</strong> ${game.developers?.map(d => d.name).join(', ') || 'Unknown'}</p>
+                    <p><strong>Publisher:</strong> ${game.publishers?.map(p => p.name).join(', ') || 'Unknown'}</p>
+                </div>
+                <button onclick="removeGame(${game.id})">Remove</button>
+            `;
+            selectedGamesList.appendChild(gameElement);
+        }
+
+        // Function to remove game from selected list
+        function removeFromSelectedList(gameId) {
+            const selectedGamesList = document.getElementById('selected-games-list');
+            const gameElement = selectedGamesList.querySelector(`[data-game-id="${gameId}"]`);
+            if (gameElement) {
+                gameElement.remove();
+            }
+        }
+
+        // Function to remove game
+        function removeGame(gameId) {
+            selectedGames.delete(gameId);
+            removeFromSelectedList(gameId);
+            const gameElement = document.querySelector(`[data-game-id="${gameId}"]`);
+            if (gameElement) {
+                gameElement.classList.remove('selected');
+            }
+            if (selectedGames.size > 0) {
+                fetchRecommendations();
+            } else {
+                document.getElementById('recommendation-list').innerHTML = '';
+            }
+        }
+
+        // Set up search functionality
+        const searchInput = document.getElementById('game-search');
+        searchInput.addEventListener('input', debounce(e => fetchGames(e.target.value), 500));
+
+        // Add new name similarity function
+        function calculateNameSimilarity(name1, name2) {
+            // Clean and normalize names
+            const cleanName1 = name1.toLowerCase().replace(/[^a-z0-9\s]/g, '');
+            const cleanName2 = name2.toLowerCase().replace(/[^a-z0-9\s]/g, '');
+            
+            // Extract series name (words before numbers)
+            const series1 = cleanName1.split(/\d/).shift().trim();
+            const series2 = cleanName2.split(/\d/).shift().trim();
+            
+            // Perfect series match
+            if (series1 && series2 && series1 === series2) {
+                return 1;
+            }
+            
+            // Check for partial series match (e.g., "forza horizon" vs "forza")
+            if (series1 && series2) {
+                if (series1.includes(series2) || series2.includes(series1)) {
+                    return 0.8;
+                }
+            }
+            
+            // Check for word overlap
+            const words1 = new Set(cleanName1.split(' '));
+            const words2 = new Set(cleanName2.split(' '));
+            const commonWords = [...words1].filter(word => words2.has(word));
+            
+            if (commonWords.length > 0) {
+                return 0.3 + (0.2 * commonWords.length);
+            }
+            
+            return 0;
+        }
+
+        // Update the showGameDetails function with better positioning
+        async function showGameDetails(gameId, clickEvent) {
+            const overlay = document.querySelector('.game-modal-overlay');
+            const modal = document.querySelector('.game-modal');
+            const content = document.querySelector('.game-modal-content');
+            
+            // Position the modal next to the clicked game
+            const gameElement = clickEvent.currentTarget;
+            const gameRect = gameElement.getBoundingClientRect();
+            
+            // Calculate position
+            let leftPosition = gameRect.right + 20; // 20px gap
+            if (leftPosition + 400 > window.innerWidth) { // 400 is modal width
+                leftPosition = gameRect.left - 420; // 20px gap
+            }
+            
+            // Set modal position
+            modal.style.top = `${window.scrollY + gameRect.top}px`;
+            modal.style.left = `${leftPosition}px`;
+            
+            // Show overlay and modal
+            overlay.style.display = 'block';
+            modal.style.display = 'block';
+            content.innerHTML = '<p>Loading...</p>';
+
+            try {
+                // Fetch detailed game info
+                const response = await fetch(`${apiUrl}/${gameId}?key=${apiKey}`);
+                const game = await response.json();
+
+                content.innerHTML = `
+                    <div class="game-modal-section">
+                        <h4>Basic Info</h4>
+                        <p><strong>Release Date:</strong> ${game.released || 'Unknown'}</p>
+                        <p><strong>Metacritic:</strong> ${game.metacritic || 'N/A'}</p>
+                        <p><strong>User Rating:</strong> ${game.rating}/5 (${game.ratings_count} ratings)</p>
+                        <p><strong>ESRB:</strong> ${game.esrb_rating?.name || 'Not rated'}</p>
+                        <p><strong>Average Playtime:</strong> ${game.playtime || 0} hours</p>
+                    </div>
+                    
+                    <div class="game-modal-section">
+                        <h4>Platforms</h4>
+                        <div>
+                            ${game.platforms?.map(p => 
+                                `<span class="platform-tag">${p.platform.name}</span>`
+                            ).join('') || 'No platform information'}
+                        </div>
+                    </div>
+
+                    <div class="game-modal-section">
+                        <h4>Game Modes</h4>
+                        <p>${game.tags?.filter(t => 
+                            t.name.toLowerCase().includes('player') || 
+                            t.name.toLowerCase().includes('multiplayer')
+                        ).map(t => t.name).join(', ') || 'No game mode information'}</p>
+                    </div>
+
+                    <div class="game-modal-section">
+                        <h4>Available On</h4>
+                        <div>
+                            ${game.stores?.map(s => 
+                                `<span class="store-tag">${s.store.name}</span>`
+                            ).join('') || 'No store information'}
+                        </div>
+                    </div>
+
+                    <div class="game-modal-section">
+                        <h4>Community Ratings</h4>
+                        ${game.ratings?.map(r => `
+                            <div>
+                                <p>${r.title}: ${r.percent}%</p>
+                                <div class="rating-bar">
+                                    <div class="rating-fill" style="width: ${r.percent}%"></div>
+                                </div>
+                            </div>
+                        `).join('') || 'No rating information'}
+                    </div>
+                `;
+            } catch (error) {
+                content.innerHTML = '<p>Error loading game details. Please try again.</p>';
+                console.error('Error fetching game details:', error);
+            }
+        }
+
+        // Update close handlers to properly hide both overlay and modal
+        document.querySelector('.game-modal-close').addEventListener('click', () => {
+            const overlay = document.querySelector('.game-modal-overlay');
+            const modal = document.querySelector('.game-modal');
+            overlay.style.display = 'none';
+            modal.style.display = 'none';
+        });
+
+        document.querySelector('.game-modal-overlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                const modal = document.querySelector('.game-modal');
+                e.currentTarget.style.display = 'none';
+                modal.style.display = 'none';
+            }
+        });
+
     </script>
     
 </body>
