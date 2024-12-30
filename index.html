@@ -26,7 +26,7 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
             background: var(--background);
@@ -38,20 +38,19 @@
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
         h1, h2, h3, h4, h5, h6 {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
+            font-family: 'Chakra Petch', sans-serif;
             letter-spacing: -0.025em;
-            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
-            transform: rotate(-1deg);
+            text-transform: uppercase;
+            font-weight: 600;
         }
 
         header h1 {
             font-size: 2.8rem;
-            font-weight: 700;
             color: white;
-            text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
-            transform: rotate(-2deg);
-            transition: transform 0.3s ease;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            transform: none;  /* Remove the rotation for a more tech feel */
         }
 
         header h1:hover {
@@ -336,6 +335,10 @@
             font-size: 1rem;
             margin: 0.5rem 0;
             line-height: 1.2;
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            transform: none;  /* Remove the rotation for a more tech feel */
         }
 
         .game-details {
@@ -399,6 +402,9 @@
             margin-bottom: 1rem;
             padding-bottom: 0.5rem;
             border-bottom: 2px solid var(--primary);
+            font-family: 'Chakra Petch', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .section-games {
@@ -545,25 +551,54 @@
         }
 
         /* 1. Typography Updates */
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Comic+Neue:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap');
 
         h1, h2, h3, h4, h5, h6 {
-            font-family: 'Fredoka One', cursive;
+            font-family: 'Chakra Petch', sans-serif;
             letter-spacing: -0.025em;
-            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
-            transform: rotate(-1deg);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
         }
 
         header h1 {
             font-size: 2.8rem;
             color: white;
-            text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
-            transform: rotate(-2deg);
-            transition: transform 0.3s ease;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            transform: none;  /* Remove the rotation for a more tech feel */
         }
 
-        header h1:hover {
-            transform: rotate(2deg);
+        .section-title {
+            font-family: 'Chakra Petch', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .game h3 {
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            transform: none;  /* Remove the rotation for a more tech feel */
+        }
+
+        /* Update popup typography */
+        .popup-title {
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+
+        .detail-section h3 {
+            font-family: 'Chakra Petch', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
         }
 
         /* 2. Card Design Updates */
@@ -1176,6 +1211,127 @@
         [data-theme="dark"] .close-popup:hover {
             background: rgba(255, 255, 255, 0.2);
         }
+
+        .comments-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .comments-container {
+            margin-bottom: 1rem;
+        }
+
+        .comment {
+            background: rgba(48, 51, 61, 0.95);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: var(--dark-text);
+            position: relative;
+        }
+
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: absolute;
+            left: -50px;
+            top: 10px;
+        }
+
+        .comment-content {
+            margin-left: 50px; /* Space for the avatar */
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .comment-author {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .comment-date {
+            font-size: 0.8rem;
+            color: var(--dark-text-light);
+        }
+
+        .comment-text {
+            margin: 0.5rem 0;
+        }
+
+        .comment-actions {
+            margin-top: 0.5rem;
+        }
+
+        .reply-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .reply-button:hover {
+            background: var(--primary-dark);
+        }
+
+        .reply-form {
+            display: none; /* Initially hidden */
+            margin-top: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .reply-form.active {
+            display: block; /* Show when active */
+        }
+
+        .hidden {
+            display: none; /* Class to hide elements */
+        }
+
+        .reply-form input,
+        .reply-form textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--dark-text);
+        }
+
+        .reply-form button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .reply-form button:hover {
+            background: var(--primary-dark);
+        }
+
+        .replies-container {
+            margin-left: 2rem;
+            margin-top: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -1224,16 +1380,222 @@
             </div>
         </section>
     </main>
-
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+
+
+
         const apiKey = '70d54f37a8bf46bfa64f0e09f2b3b0f0';
         const apiUrl = 'https://api.rawg.io/api/games';
         const selectedGames = new Set();
+        let currentGameId = null; // Add this line
+
+        // Initialize Supabase client
+        const supabaseUrl = 'https://rfgsqgnrjksygbsqwwcz.supabase.co'
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJmZ3NxZ25yamtzeWdic3F3d2N6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU1MTI0NjcsImV4cCI6MjA1MTA4ODQ2N30.EymPclC3kMZPScDnBeA3beg9gVb0UE4EdqQT9z-DLIY'
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
+
+        // Add these functions BEFORE loadComments
+        function setupReplyHandlers() {
+            document.querySelectorAll('.reply-button').forEach(button => {
+                button.onclick = (e) => {
+                    e.preventDefault();
+                    const commentId = button.closest('.comment').dataset.commentId;
+                    toggleReplyForm(commentId);
+                };
+            });
+
+            document.querySelectorAll('.view-replies-button').forEach(button => {
+                button.onclick = (e) => {
+                    e.preventDefault();
+                    const commentId = button.closest('.comment').dataset.commentId;
+                    toggleReplies(commentId);
+                };
+            });
+        }
+
+        function toggleReplyForm(commentId) {
+            const replyForm = document.getElementById(`reply-form-${commentId}`);
+            replyForm.classList.toggle('active');
+        }
+
+        function toggleReplies(commentId) {
+            const repliesContainer = document.getElementById(`replies-${commentId}`);
+            const button = repliesContainer.previousElementSibling;
+            repliesContainer.classList.toggle('hidden');
+            
+            if (repliesContainer.classList.contains('hidden')) {
+                button.textContent = 'Show replies';
+            } else {
+                button.textContent = 'Hide replies';
+            }
+        }
+
+        function organizeCommentsTree(comments) {
+            const commentMap = new Map();
+            const rootComments = [];
+
+            comments.forEach(comment => {
+                comment.replies = [];
+                commentMap.set(comment.id, comment);
+            });
+
+            comments.forEach(comment => {
+                if (comment.parent_id) {
+                    const parentComment = commentMap.get(comment.parent_id);
+                    if (parentComment) {
+                        parentComment.replies.push(comment);
+                    }
+                } else {
+                    rootComments.push(comment);
+                }
+            });
+
+            return rootComments;
+        }
+
+        // Updated loadComments function
+        async function loadComments(gameId) {
+            console.log('Loading comments for game:', gameId);
+            try {
+                const { data, error } = await supabaseClient
+                    .from('comments')
+                    .select('*')
+                    .eq('game_id', gameId)
+                    .order('created_at', { ascending: true });
+
+                if (error) throw error;
+
+                const rootComments = organizeCommentsTree(data);
+                const commentsContainer = document.querySelector('.comments-container');
+                
+                if (!commentsContainer) {
+                    console.error('Comments container not found!');
+                    return;
+                }
+
+                commentsContainer.innerHTML = renderComments(rootComments);
+                setupReplyHandlers();
+            } catch (error) {
+                console.error('Error loading comments:', error);
+            }
+        }
+
+        // Function to render comments recursively
+        function renderComments(comments, depth = 0) {
+            return comments.map(comment => `
+                <div class="comment" data-comment-id="${comment.id}">
+                    <div class="comment-avatar">
+                        ${comment.user_name.charAt(0).toUpperCase()}
+                    </div>
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <span class="comment-author">${comment.user_name}</span>
+                            <span class="comment-date">${new Date(comment.created_at).toLocaleDateString()}</span>
+                        </div>
+                        <div class="comment-text">${comment.comment_text}</div>
+                        <div class="comment-actions">
+                            <button class="reply-button" onclick="toggleReplyForm(${comment.id})">
+                                Reply
+                            </button>
+                        </div>
+                        <div class="reply-form" id="reply-form-${comment.id}">
+                            <input type="text" class="reply-name" placeholder="Your name">
+                            <textarea class="reply-text" placeholder="Write a reply..."></textarea>
+                            <button onclick="submitReply(${comment.id})">Post Reply</button>
+                        </div>
+                        ${comment.replies.length > 0 ? `
+                            <button class="view-replies-button" onclick="toggleReplies(${comment.id})">
+                                ${comment.replies.length} ${comment.replies.length === 1 ? 'reply' : 'replies'}
+                            </button>
+                            <div class="replies-container" id="replies-${comment.id}">
+                                ${renderComments(comment.replies, depth + 1)}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Function to submit a reply
+        async function submitReply(parentId) {
+            const replyForm = document.getElementById(`reply-form-${parentId}`);
+            const userName = replyForm.querySelector('.reply-name').value;
+            const replyText = replyForm.querySelector('.reply-text').value;
+            
+            console.log('Current game ID:', currentGameId); // Debug log
+            
+            if (!currentGameId) {
+                console.error('No game ID found');
+                alert('Error: Could not determine which game this reply belongs to');
+                return;
+            }
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('comments')
+                    .insert({
+                        game_id: parseInt(currentGameId),
+                        user_name: userName,
+                        comment_text: replyText,
+                        parent_id: parseInt(parentId)
+                    })
+                    .select();
+
+                if (error) {
+                    console.error('Supabase error:', error);
+                    throw error;
+                }
+
+                console.log('Reply submitted successfully:', data);
+
+                // Reload comments to show the new reply
+                await loadComments(currentGameId);
+                
+                // Clear and hide the reply form
+                replyForm.querySelector('.reply-name').value = '';
+                replyForm.querySelector('.reply-text').value = '';
+                replyForm.classList.remove('active');
+            } catch (error) {
+                console.error('Error submitting reply:', error);
+                alert('Failed to submit reply. Please try again.');
+            }
+        }
+
+        async function addComment(gameId, userName, commentText) {
+            console.log('Adding comment:', { gameId, userName, commentText });
+            try {
+                const { data, error } = await supabaseClient
+                    .from('comments')
+                    .insert([
+                        {
+                            game_id: gameId,
+                            user_name: userName,
+                            comment_text: commentText
+                        }
+                    ])
+                    .select();
+
+                console.log('Comment added:', data);
+                console.log('Any errors:', error);
+
+                if (error) throw error;
+
+                // Reload comments to show the new one
+                await loadComments(gameId);
+                
+                // Clear the form
+                document.getElementById('commenter-name').value = '';
+                document.getElementById('comment-text').value = '';
+            } catch (error) {
+                console.error('Error adding comment:', error);
+            }
+        }
 
         // 1. Core Scoring Functions
         function calculateCoreSimilarity(selectedGame, candidateGame) {
             const genreSimilarity = calculateGenreSimilarity(selectedGame.genres, candidateGame.genres);
-            const tagSimilarity = calculateTagSimilarity(selectedGame.tags, candidateGame.tags);
+             const tagSimilarity = calculateTagSimilarity(selectedGame.tags, candidateGame.tags);
             const mechanicsSimilarity = calculateMechanicsSimilarity(selectedGame, candidateGame);
             const nameSimilarity = calculateNameSimilarity(selectedGame.name, candidateGame.name);
 
@@ -1446,15 +1808,17 @@
                 // Split into series/developer matches and other recommendations
                 const seriesMatches = allRankedGames
                     .filter(({game, score, details}) => 
-                        details.coreSimilarity.nameSimilarity > 0.8 || 
+                        !selectedGames.has(game.id.toString()) &&  // Add this check
+                        (details.coreSimilarity.nameSimilarity > 0.8 || 
                         details.devPub.developerMatch || 
-                        details.devPub.publisherMatch
+                        details.devPub.publisherMatch)
                     )
                     .sort((a, b) => b.score - a.score)
                     .slice(0, 4); // Limit to top 4 series matches
 
                 const otherRecommendations = allRankedGames
                     .filter(({game, score, details}) => 
+                        !selectedGames.has(game.id.toString()) &&  // Add this check
                         details.coreSimilarity.nameSimilarity <= 0.8 && 
                         !details.devPub.developerMatch && 
                         !details.devPub.publisherMatch
@@ -1551,6 +1915,10 @@
                 console.log('Game clicked:', game.name);
                 const popup = document.getElementById('game-popup');
                 const content = popup.querySelector('.popup-content');
+                
+                // Set the current game ID immediately when clicking
+                currentGameId = game.id;
+                console.log('Set currentGameId to:', currentGameId);
                 
                 try {
                     // Show loading state
@@ -1664,10 +2032,15 @@
                         <div class="detail-section">
                             <h3>Why This Game?</h3>
                             <div class="match-reasons">
-                                ${matchDetails.coreSimilarity.nameSimilarity > 0.8 ? '<p>✓ Same game series</p>' : ''}
-                                ${matchDetails.devPub.developerMatch ? '<p>✓ Same developer</p>' : ''}
-                                ${matchDetails.devPub.publisherMatch ? '<p>✓ Same publisher</p>' : ''}
-                                <p>Match Score: ${(matchDetails.score * 100).toFixed(0)}%</p>
+                                ${matchDetails.coreSimilarity.nameSimilarity > 0.8 ? 
+                                    '<div class="platform-tag"><span class="platform-name">✓ Same game series</span></div>' : ''}
+                                ${matchDetails.devPub.developerMatch ? 
+                                    '<div class="platform-tag"><span class="platform-name">✓ Same developer</span></div>' : ''}
+                                ${matchDetails.devPub.publisherMatch ? 
+                                    '<div class="platform-tag"><span class="platform-name">✓ Same publisher</span></div>' : ''}
+                                <div class="platform-tag">
+                                    <span class="platform-name">Match Score: ${(matchDetails.score * 100).toFixed(0)}%</span>
+                                </div>
                             </div>
                         </div>
                     ` : '';
@@ -1694,6 +2067,17 @@
                                 ${genresHTML}
                                 ${matchDetailsHTML}
                             </div>
+                            <div class="comments-section">
+                                <h3>Comments</h3>
+                                <div class="comments-container">
+                                    <!-- Comments will be loaded here -->
+                                </div>
+                                <form id="comment-form" class="comment-form">
+                                    <input type="text" id="commenter-name" placeholder="Your name" required>
+                                    <textarea id="comment-text" placeholder="Add a comment..." required></textarea>
+                                    <button type="submit">Post Comment</button>
+                                </form>
+                            </div>
                         </div>
                     `;
 
@@ -1703,6 +2087,26 @@
                         popup.style.display = 'none';
                     });
                     
+                    // Load comments for this game
+                    await loadComments(currentGameId);
+
+                    // Set up comment form submission
+                    const commentForm = document.getElementById('comment-form');
+                    if (commentForm) {
+                        console.log('Found comment form, setting up submission');
+                        commentForm.onsubmit = async (e) => {
+                            e.preventDefault();
+                            console.log('Form submitted');
+                            
+                            const userName = document.getElementById('commenter-name').value;
+                            const commentText = document.getElementById('comment-text').value;
+                            
+                            console.log('Submitting comment:', { currentGameId, userName, commentText });
+                            await addComment(currentGameId, userName, commentText);
+                        };
+                    } else {
+                        console.error('Comment form not found!');
+                    }
                 } catch (error) {
                     console.error('Error loading game details:', error);
                     console.error('Error stack:', error.stack);
@@ -1919,7 +2323,9 @@
 
         // Move these functions outside the DOMContentLoaded event
         function updatePopupContent(gameDetails) {
+            currentGameId = gameDetails.id;  // Add this line at the start of the function
             const popup = document.getElementById('game-popup');
+            popup.dataset.gameId = gameDetails.id;  // Also store it in the popup
             const content = popup.querySelector('.popup-content');
             
             content.innerHTML = `
